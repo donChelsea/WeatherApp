@@ -1,10 +1,10 @@
 package com.example.weatherapp2.ui.forecast
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.weatherapp2.R
 import dagger.hilt.android.AndroidEntryPoint
@@ -15,6 +15,10 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class ForecastFragment : Fragment() {
     private val viewModel: ForecastViewModel by viewModels()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -27,7 +31,7 @@ class ForecastFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         CoroutineScope(Dispatchers.Main).launch {
-            viewModel.getForecast()
+            viewModel.getForecast("Brooklyn")
         }
 
     }

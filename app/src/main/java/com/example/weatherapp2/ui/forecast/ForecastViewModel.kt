@@ -25,9 +25,9 @@ class ForecastViewModel @Inject constructor(private val weatherApi: WeatherApi) 
     private val _city = MutableLiveData<City>()
     val city: LiveData<City> = _city
 
-    suspend fun getForecast() {
+    suspend fun getForecast(city: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            val response = weatherApi.getForecast("33.44", "-94.04", "dbad4777028d9b7e22614e23fb08433a")
+            val response = weatherApi.getForecast(city, "dbad4777028d9b7e22614e23fb08433a")
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful && response.body() != null) {
                     response.body()?.let {
