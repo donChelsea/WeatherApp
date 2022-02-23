@@ -7,7 +7,7 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface WeatherApi {
-    @GET("data/2.5/forecast/?cnt=7&units=imperial")
+    @GET("data/2.5/forecast/?units=imperial")
     suspend fun getForecast(
         @Query("q") city: String,
         @Query("appid") appId: String
@@ -17,5 +17,3 @@ interface WeatherApi {
         const val BASE_URL = "https://api.openweathermap.org/"
     }
 }
-
-//?lat=40.63012&lon=-73.8879975&cnt=7&appid=dbad4777028d9b7e22614e23fb08433a

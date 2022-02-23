@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.weatherapp2.R
 import com.example.weatherapp2.data.entities.City
 import com.example.weatherapp2.data.entities.Day
+import com.example.weatherapp2.data.entities.WeatherResponse
 import com.example.weatherapp2.data.remote.WeatherApi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -19,11 +20,10 @@ import javax.inject.Inject
 @HiltViewModel
 class ForecastViewModel @Inject constructor(private val weatherApi: WeatherApi) : ViewModel() {
 
-    private val _forecast = MutableLiveData<List<Day>>()
-    val forecast: LiveData<List<Day>> = _forecast
+    private val _forecast = MutableLiveData<WeatherResponse>()
+    val forecast: LiveData<WeatherResponse> = _forecast
 
-    private val _city = MutableLiveData<City>()
-    val city: LiveData<City> = _city
+    val weekMap = mutableMapOf<String, MutableList<Day>>()
 
     suspend fun getForecast(city: String) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -31,9 +31,7 @@ class ForecastViewModel @Inject constructor(private val weatherApi: WeatherApi) 
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful && response.body() != null) {
                     response.body()?.let {
-                        _forecast.value = it.list
-                        Log.d("ForecastViewModel", it.list.toString())
-                        Log.d("ForecastViewModel", it.city.coord.toString())
+                        _forecast.value = it
                     }
                 } else {
                     throw Exception(response.errorBody()?.charStream()?.readText())

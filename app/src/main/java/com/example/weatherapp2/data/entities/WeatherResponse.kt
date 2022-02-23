@@ -35,11 +35,11 @@ data class Weather(
 )
 
 data class City(
-    val name: String,
-    val coord: Coord
+    val name: String = "",
+    val coord: Coord = Coord()
 )
 
 data class Coord(
-    val lat: Double,
-    val lon: Double
+    val lat: Double = 0.00,
+    val lon: Double = 0.00
 )
