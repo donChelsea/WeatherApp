@@ -1,4 +1,4 @@
-package com.example.weatherapp2.ui.forecast
+package com.example.weatherapp2.ui
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -14,12 +14,15 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
-class ForecastViewModel @Inject constructor(private val weatherApi: WeatherApi) : ViewModel() {
+class MainViewModel @Inject constructor(private val weatherApi: WeatherApi) : ViewModel() {
 
     private val _forecast = MutableLiveData<WeatherResponse>()
     val forecast: LiveData<WeatherResponse> = _forecast
 
     val weekMap = mutableMapOf<String, MutableList<Day>>()
+
+    var position = 0
+    var currentDayInView = ""
 
     suspend fun getForecast(city: String) {
         viewModelScope.launch(Dispatchers.IO) {

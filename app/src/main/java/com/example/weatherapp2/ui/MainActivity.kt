@@ -1,32 +1,53 @@
 package com.example.weatherapp2.ui
 
-import android.Manifest
-import android.annotation.SuppressLint
-import android.content.Context
-import android.content.Intent
-import android.content.pm.PackageManager
-import android.location.Address
-import android.location.Geocoder
-import android.location.Location
-import android.location.LocationManager
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.provider.Settings
 import android.util.Log
 import android.widget.Toast
-import androidx.constraintlayout.motion.widget.Debug.getLocation
-import androidx.core.app.ActivityCompat
-import com.example.weatherapp2.R
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
+import androidx.viewpager2.widget.ViewPager2
+import com.example.weatherapp2.databinding.ActivityMainBinding
+import com.example.weatherapp2.ui.forecast.ForecastViewPagerAdapter
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.AdapterDataObserver
+import android.R.attr.name
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+    private val viewModel: MainViewModel by viewModels()
+    private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        viewModel.forecast.observe(this@MainActivity) { forecast ->
+            forecast.list.forEach { day ->
+                val date = day.dateTimeString.split(" ")[0]
+
+                if (!viewModel.weekMap.containsKey(date)) {
+                    viewModel.weekMap[date] = mutableListOf(day)
+                } else {
+                    viewModel.weekMap[date]?.add(day)
+                }
+            }
+
+            binding.apply {
+                val adapter = ForecastViewPagerAdapter(this@MainActivity, viewModel.weekMap.keys.toList())
+                forecastViewpager.adapter = adapter
+
+                cityNameTv.text = forecast.city.name
+                indicator.setViewPager(binding.forecastViewpager)
+            }
+        }
+
+        CoroutineScope(Dispatchers.Main).launch {
+            viewModel.getForecast("Brooklyn")
+        }
     }
 }
