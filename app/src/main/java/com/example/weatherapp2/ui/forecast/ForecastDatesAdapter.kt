@@ -14,7 +14,8 @@ import kotlin.math.max
 
 class ForecastDatesAdapter(
     private val context: Context,
-    private val forecast: List<Day>
+    private val forecast: List<Day>,
+    private val clickListener: (Day) -> Unit
 ) : BaseAdapter() {
 
     private val inflater: LayoutInflater
@@ -43,6 +44,11 @@ class ForecastDatesAdapter(
         weatherTv.text = day.weather[0].description
         maxTempTextTv.text = day.temp.max.toString()
         minTempTextTv.text = day.temp.min.toString()
+
+        rowView.setOnClickListener {
+            clickListener(day)
+        }
+
 //        Picasso.get().load()
 
         return rowView
