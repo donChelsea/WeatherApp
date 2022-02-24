@@ -66,11 +66,16 @@ class MainActivity : AppCompatActivity() {
         // search queryTextChange Listener
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(p0: String?): Boolean {
+                CoroutineScope(Dispatchers.Main).launch {
+                    if (p0 != null) {
+                        viewModel.getForecast(p0)
+                    }
+                }
+                searchView.setQuery("", false)
                 return true
             }
 
             override fun onQueryTextChange(query: String?): Boolean {
-                Log.d("onQueryTextChange", "query: " + query)
                 return true
             }
         })
