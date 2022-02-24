@@ -10,7 +10,7 @@ import androidx.fragment.app.activityViewModels
 import com.example.weatherapp2.data.entities.Day
 import com.example.weatherapp2.databinding.FragmentForecastBinding
 import com.example.weatherapp2.ui.MainViewModel
-import com.example.weatherapp2.ui.current.CurrentActivity
+import com.example.weatherapp2.ui.detail.DetailActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -46,7 +46,7 @@ class ForecastFragment : Fragment() {
     }
 
     private fun onDayClick(day: Day) {
-        val intent = Intent(requireContext(), CurrentActivity::class.java)
+        val intent = Intent(requireContext(), DetailActivity::class.java)
         intent.putExtra(ARG_DAY, day)
         startActivity(intent)
     }

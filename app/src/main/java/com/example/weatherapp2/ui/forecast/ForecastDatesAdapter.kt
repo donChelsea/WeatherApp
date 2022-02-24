@@ -39,11 +39,11 @@ class ForecastDatesAdapter(
 
         val day = getItem(p0)
 
-        currentTempTv.text = day.temp.temp.toString()
-        timeTv.text = day.dateTimeString
+        currentTempTv.text = day.temp.temp.toInt().toString()
+        timeTv.text = day.dateTimeString.split(" ")[1]
         weatherTv.text = day.weather[0].description
-        maxTempTextTv.text = day.temp.max.toString()
-        minTempTextTv.text = day.temp.min.toString()
+        maxTempTextTv.text = day.temp.max.toInt().toString()
+        minTempTextTv.text = day.temp.min.toInt().toString()
 
         rowView.setOnClickListener {
             clickListener(day)
