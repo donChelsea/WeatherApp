@@ -1,13 +1,16 @@
 package com.example.weatherapp2.ui.forecast
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import com.example.weatherapp2.data.entities.Day
 import com.example.weatherapp2.databinding.FragmentForecastBinding
 import com.example.weatherapp2.ui.MainViewModel
+import com.example.weatherapp2.ui.current.CurrentActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -35,16 +38,22 @@ class ForecastFragment : Fragment() {
                 it.toList()
             }
 
-            val adapter = hourly?.let { ForecastDatesAdapter(requireContext(), it) }
+            val adapter = hourly?.let { ForecastDatesAdapter(requireContext(), it) {day -> onDayClick(day)} }
             forecastListView.adapter = adapter
 
             dateTv.text = viewModel.currentDayInView
         }
     }
 
+    private fun onDayClick(day: Day) {
+        val intent = Intent(requireContext(), CurrentActivity::class.java)
+        intent.putExtra(ARG_DAY, day)
+        startActivity(intent)
+    }
+
     companion object {
         private const val ARG_POSITION = "position"
-        private const val ARG_DAY = "day"
+        const val ARG_DAY = "day"
 
         fun getInstance(position: Int, day: String): Fragment {
             val forecastFragment = ForecastFragment()
