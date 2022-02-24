@@ -21,6 +21,15 @@ class DetailActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val day = intent.getParcelableExtra<Day>(ARG_DAY)
-        Log.d("CurrentActivity", day.toString())
+
+        binding.apply {
+            if (day != null) {
+                cityTv.text = viewModel.city
+                currentTempTv.text = day.temp.temp.toInt().toString()
+                timeTv.text = day.dateTimeString.split(" ")[1]
+                maxTempTextTv.text = day.temp.max.toInt().toString()
+                minTempTextTv.text = day.temp.min.toInt().toString()
+            }
+        }
     }
 }

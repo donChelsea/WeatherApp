@@ -49,11 +49,13 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
+            viewModel.city = forecast.city.name
+
             binding.apply {
                 val adapter = ForecastViewPagerAdapter(this@MainActivity, viewModel.weekMap.keys.toList())
                 forecastViewpager.adapter = adapter
 
-                cityNameTv.text = forecast.city.name
+                cityNameTv.text = viewModel.city
                 indicator.setViewPager(binding.forecastViewpager)
             }
         }

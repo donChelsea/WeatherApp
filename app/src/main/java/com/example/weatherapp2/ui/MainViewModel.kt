@@ -28,6 +28,7 @@ class MainViewModel @Inject constructor(
 
     var position = 0
     var currentDayInView = ""
+    var city = ""
 
     suspend fun getForecast(city: String) {
         viewModelScope.launch(Dispatchers.IO) {
