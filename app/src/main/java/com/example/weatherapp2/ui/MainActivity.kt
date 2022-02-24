@@ -15,22 +15,28 @@ import kotlinx.coroutines.launch
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.AdapterDataObserver
 import android.R.attr.name
+import android.content.Intent
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.MenuItemCompat
 import com.example.weatherapp2.R
+import com.example.weatherapp2.data.db.DBHandler
+import com.example.weatherapp2.ui.saved.SavedActivity
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private val viewModel: MainViewModel by viewModels()
     private lateinit var binding: ActivityMainBinding
+    private var dbHandler: DBHandler? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        dbHandler = DBHandler(this@MainActivity)
 
         viewModel.forecast.observe(this@MainActivity) { forecast ->
             forecast.list.forEach { day ->
@@ -68,7 +74,9 @@ class MainActivity : AppCompatActivity() {
             override fun onQueryTextSubmit(p0: String?): Boolean {
                 CoroutineScope(Dispatchers.Main).launch {
                     if (p0 != null) {
+                        p0.capitalize()
                         viewModel.getForecast(p0)
+                        viewModel.addCityToDB(p0)
                     }
                 }
                 searchView.setQuery("", false)
@@ -93,6 +101,24 @@ class MainActivity : AppCompatActivity() {
             }
         })
         return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
+        R.id.action_search -> {
+            true
+        }
+
+        R.id.action_saved -> {
+            val intent = Intent(this, SavedActivity::class.java)
+            startActivity(intent)
+            true
+        }
+
+        else -> {
+            // If we got here, the user's action was not recognized.
+            // Invoke the superclass to handle it.
+            super.onOptionsItemSelected(item)
+        }
     }
 
     private fun showToast(msg: String) {

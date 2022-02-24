@@ -8,7 +8,8 @@
         <entry key="app/src/main/res/layout/forecast_slide.xml" value="0.25" />
         <entry key="app/src/main/res/layout/forecast_slide_fragment.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_forecast.xml" value="0.24074074074074073" />
-        <entry key="app/src/main/res/menu/menu.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_saved.xml" value="0.3" />
+        <entry key="app/src/main/res/menu/menu.xml" value="0.25" />
       </map>
     </option>
   </component>

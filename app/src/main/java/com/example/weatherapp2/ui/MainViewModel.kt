@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.weatherapp2.data.db.DBHandler
 import com.example.weatherapp2.data.entities.Day
 import com.example.weatherapp2.data.entities.WeatherResponse
 import com.example.weatherapp2.data.remote.WeatherApi
@@ -11,10 +12,14 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.ArrayList
 import javax.inject.Inject
 
 @HiltViewModel
-class MainViewModel @Inject constructor(private val weatherApi: WeatherApi) : ViewModel() {
+class MainViewModel @Inject constructor(
+    private val weatherApi: WeatherApi,
+    private val dbHandler: DBHandler
+) : ViewModel() {
 
     private val _forecast = MutableLiveData<WeatherResponse>()
     val forecast: LiveData<WeatherResponse> = _forecast
@@ -37,6 +42,18 @@ class MainViewModel @Inject constructor(private val weatherApi: WeatherApi) : Vi
                 }
             }
         }
+    }
+
+    fun addCityToDB(city: String) {
+        dbHandler.addCity(city)
+    }
+
+    fun readDB(): MutableList<String> {
+        return dbHandler.readCourses()
+    }
+
+    fun deleteDBEntry(city: String) {
+        dbHandler.deleteEntry(city)
     }
 
 }
