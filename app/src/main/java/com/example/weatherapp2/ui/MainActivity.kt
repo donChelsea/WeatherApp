@@ -24,19 +24,19 @@ import androidx.core.view.MenuItemCompat
 import com.example.weatherapp2.R
 import com.example.weatherapp2.data.db.DBHandler
 import com.example.weatherapp2.ui.saved.SavedActivity
+import com.example.weatherapp2.ui.saved.SavedActivity.Companion.ARG_LOCATION
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private val viewModel: MainViewModel by viewModels()
     private lateinit var binding: ActivityMainBinding
-    private var dbHandler: DBHandler? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        dbHandler = DBHandler(this@MainActivity)
+        val location = intent.getStringExtra(ARG_LOCATION)
 
         viewModel.forecast.observe(this@MainActivity) { forecast ->
             forecast.list.forEach { day ->
@@ -49,7 +49,11 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
-            viewModel.city = forecast.city.name
+            if (!location.isNullOrEmpty()) {
+                viewModel.city = location
+            } else {
+                viewModel.city = forecast.city.name
+            }
 
             binding.apply {
                 val adapter = ForecastViewPagerAdapter(this@MainActivity, viewModel.weekMap.keys.toList())
