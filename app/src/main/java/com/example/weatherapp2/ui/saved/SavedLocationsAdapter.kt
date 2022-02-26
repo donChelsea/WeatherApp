@@ -8,14 +8,12 @@ import android.widget.BaseAdapter
 import android.widget.ImageView
 import android.widget.TextView
 import com.example.weatherapp2.R
-import com.example.weatherapp2.data.entities.Day
-import com.squareup.picasso.Picasso
-import kotlin.math.max
 
 class SavedLocationsAdapter(
     private val context: Context,
     private val locations: List<String>,
-    private val clickListener: (String) -> Unit
+    private val searchListener: (String) -> Unit,
+    private val deleteListener: (String) -> Unit
 ) : BaseAdapter() {
 
     private val inflater: LayoutInflater
@@ -31,12 +29,17 @@ class SavedLocationsAdapter(
         val rowView = inflater.inflate(R.layout.saved_item_view, p2, false)
 
         val savedLocationTv = rowView.findViewById<TextView>(R.id.saved_location_tv)
+        val deleteButton = rowView.findViewById<ImageView>(R.id.delete_icon)
 
         val location = getItem(p0).capitalize()
 
         savedLocationTv.text = location
         savedLocationTv.setOnClickListener {
-            clickListener(location)
+            searchListener(location)
+        }
+
+        deleteButton.setOnClickListener {
+            deleteListener(location)
         }
 
         return rowView

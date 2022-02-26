@@ -19,8 +19,9 @@ import dagger.hilt.android.AndroidEntryPoint
 class SavedActivity : AppCompatActivity() {
     private val viewModel: MainViewModel by viewModels()
     private lateinit var binding: ActivitySavedBinding
+    var adapter: SavedLocationsAdapter? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+        override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySavedBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -28,7 +29,7 @@ class SavedActivity : AppCompatActivity() {
         val locations = viewModel.readDB()
 
         binding.apply {
-            val adapter = locations.let { SavedLocationsAdapter(this@SavedActivity, it) {location -> onLocationClick(location)} }
+            adapter = locations.let { SavedLocationsAdapter(this@SavedActivity, it, {location -> onLocationClick(location)}, {location -> onDelete(location)})  }
             savedListView.adapter = adapter
         }
     }
@@ -37,6 +38,11 @@ class SavedActivity : AppCompatActivity() {
         val intent = Intent(this, MainActivity::class.java)
         intent.putExtra(ARG_LOCATION, location)
         startActivity(intent)
+    }
+
+    private fun onDelete(location: String) {
+        viewModel.deleteDBEntry(location)
+        adapter?.notifyDataSetChanged()
     }
 
     companion object {

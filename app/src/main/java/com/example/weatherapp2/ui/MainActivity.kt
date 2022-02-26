@@ -1,28 +1,20 @@
 package com.example.weatherapp2.ui
 
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.viewpager2.widget.ViewPager2
 import com.example.weatherapp2.databinding.ActivityMainBinding
 import com.example.weatherapp2.ui.forecast.ForecastViewPagerAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.AdapterDataObserver
-import android.R.attr.name
 import android.content.Intent
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.widget.SearchView
-import androidx.appcompat.widget.Toolbar
-import androidx.core.view.MenuItemCompat
 import com.example.weatherapp2.R
-import com.example.weatherapp2.data.db.DBHandler
 import com.example.weatherapp2.ui.saved.SavedActivity
 import com.example.weatherapp2.ui.saved.SavedActivity.Companion.ARG_LOCATION
 
@@ -70,7 +62,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu, menu)
+        menuInflater.inflate(R.menu.forecast_menu, menu)
 
         val item = menu?.findItem(R.id.action_search)
         val searchView = item?.actionView as SearchView
