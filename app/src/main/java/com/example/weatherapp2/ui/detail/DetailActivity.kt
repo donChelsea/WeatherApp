@@ -1,9 +1,8 @@
 package com.example.weatherapp2.ui.detail
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import com.example.weatherapp2.data.entities.Day
 import com.example.weatherapp2.databinding.ActivityDetailBinding
 import com.example.weatherapp2.ui.MainViewModel

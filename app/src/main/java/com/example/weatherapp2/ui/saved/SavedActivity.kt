@@ -3,16 +3,10 @@ package com.example.weatherapp2.ui.saved
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.viewModels
-import com.example.weatherapp2.data.entities.Day
-import com.example.weatherapp2.databinding.ActivityMainBinding
 import com.example.weatherapp2.databinding.ActivitySavedBinding
 import com.example.weatherapp2.ui.MainActivity
 import com.example.weatherapp2.ui.MainViewModel
-import com.example.weatherapp2.ui.detail.DetailActivity
-import com.example.weatherapp2.ui.forecast.ForecastDatesAdapter
-import com.example.weatherapp2.ui.forecast.ForecastFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -36,7 +30,7 @@ class SavedActivity : AppCompatActivity() {
 
     private fun onLocationClick(location: String) {
         val intent = Intent(this, MainActivity::class.java)
-        intent.putExtra(ARG_LOCATION, location)
+        intent.putExtra(ARG_SAVED_LOCATION, location)
         startActivity(intent)
     }
 
@@ -46,7 +40,7 @@ class SavedActivity : AppCompatActivity() {
     }
 
     companion object {
-        const val ARG_LOCATION = "location"
+        const val ARG_SAVED_LOCATION = "saved location"
     }
 
 }

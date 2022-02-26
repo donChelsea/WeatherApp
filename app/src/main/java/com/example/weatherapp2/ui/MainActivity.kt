@@ -1,22 +1,21 @@
 package com.example.weatherapp2.ui
 
+import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
+import android.view.Menu
+import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
+import com.example.weatherapp2.R
 import com.example.weatherapp2.databinding.ActivityMainBinding
 import com.example.weatherapp2.ui.forecast.ForecastViewPagerAdapter
+import com.example.weatherapp2.ui.saved.SavedActivity
+import com.example.weatherapp2.ui.saved.SavedActivity.Companion.ARG_SAVED_LOCATION
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import android.content.Intent
-import android.view.Menu
-import android.view.MenuItem
-import androidx.appcompat.widget.SearchView
-import com.example.weatherapp2.R
-import com.example.weatherapp2.ui.saved.SavedActivity
-import com.example.weatherapp2.ui.saved.SavedActivity.Companion.ARG_LOCATION
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -28,7 +27,10 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val location = intent.getStringExtra(ARG_LOCATION)
+        if (intent.getStringExtra(ARG_SAVED_LOCATION) != null) {
+            viewModel.city = intent.getStringExtra(ARG_SAVED_LOCATION).toString()
+            CoroutineScope(Dispatchers.Main).launch { viewModel.getForecast(viewModel.city) }
+        }
 
         viewModel.forecast.observe(this@MainActivity) { forecast ->
             forecast.list.forEach { day ->
@@ -41,23 +43,18 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
-            if (!location.isNullOrEmpty()) {
-                viewModel.city = location
-            } else {
+            if (forecast.city.name.isNotEmpty()) {
                 viewModel.city = forecast.city.name
             }
 
             binding.apply {
-                val adapter = ForecastViewPagerAdapter(this@MainActivity, viewModel.weekMap.keys.toList())
+                val adapter =
+                    ForecastViewPagerAdapter(this@MainActivity, viewModel.weekMap.keys.toList())
                 forecastViewpager.adapter = adapter
 
                 cityNameTv.text = viewModel.city
                 indicator.setViewPager(binding.forecastViewpager)
             }
-        }
-
-        CoroutineScope(Dispatchers.Main).launch {
-            viewModel.getForecast("Brooklyn")
         }
     }
 
@@ -67,12 +64,12 @@ class MainActivity : AppCompatActivity() {
         val item = menu?.findItem(R.id.action_search)
         val searchView = item?.actionView as SearchView
 
-        // search queryTextChange Listener
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(p0: String?): Boolean {
                 CoroutineScope(Dispatchers.Main).launch {
                     if (p0 != null) {
                         p0.capitalize()
+                        viewModel.city = p0
                         viewModel.getForecast(p0)
                         viewModel.addCityToDB(p0)
                     }
@@ -82,19 +79,6 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onQueryTextChange(query: String?): Boolean {
-                return true
-            }
-        })
-
-        //Expand Collapse listener
-        item.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
-            override fun onMenuItemActionCollapse(p0: MenuItem?): Boolean {
-                showToast("Action Collapse")
-                return true
-            }
-
-            override fun onMenuItemActionExpand(p0: MenuItem?): Boolean {
-                showToast("Action Expand")
                 return true
             }
         })
@@ -113,13 +97,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         else -> {
-            // If we got here, the user's action was not recognized.
-            // Invoke the superclass to handle it.
             super.onOptionsItemSelected(item)
         }
     }
 
-    private fun showToast(msg: String) {
-        Toast.makeText(this@MainActivity, msg, Toast.LENGTH_SHORT).show()
-    }
 }

@@ -9,8 +9,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.example.weatherapp2.R
 import com.example.weatherapp2.data.entities.Day
-import com.squareup.picasso.Picasso
-import kotlin.math.max
 
 class ForecastDatesAdapter(
     private val context: Context,
